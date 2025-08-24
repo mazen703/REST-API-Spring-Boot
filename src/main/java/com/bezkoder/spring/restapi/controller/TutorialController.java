@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bezkoder.spring.restapi.model.Tutorial;
 import com.bezkoder.spring.restapi.service.TutorialService;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8087")
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
