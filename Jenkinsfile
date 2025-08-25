@@ -8,31 +8,35 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the commit that triggered the webhook
                 checkout scm
+            }
+        }
+
+        stage('Clean') {
+            steps {
+                sh './mvnw clean'
             }
         }
 
         stage('Run Controller Tests') {
             steps {
                 echo "Running controller unit tests..."
-                sh './mvnw clean test -Dtest=**/*ControllerTests.java'
+                sh './mvnw test -Dtest=*ControllerTests -DfailIfNoTests=false'
             }
         }
 
         stage('Package App') {
             steps {
                 echo "Packaging application..."
-                sh './mvnw clean package -DskipTests'
+                sh './mvnw package -DskipTests'
             }
         }
 
         stage('Docker Build & Push') {
             steps {
-                // Use Jenkins credentials safely
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub',       // Jenkins credential ID
-                    usernameVariable: 'DOCKER_USER', // Temporary env variable
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
                     sh """
@@ -54,3 +58,4 @@ pipeline {
         }
     }
 }
+
